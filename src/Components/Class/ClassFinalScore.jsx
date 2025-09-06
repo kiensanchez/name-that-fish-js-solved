@@ -2,7 +2,7 @@ import { Component } from "react";
 
 export class ClassFinalScore extends Component {
   render() {
-    const { correctCount, totalCount } = this.props.state;
+    const { correctCount, totalCount } = this.props;
     return (
       <div id="final-score">
         <h1>Your Final Score Was</h1>

@@ -3,13 +3,9 @@ import "./styles/score-board.css";
 
 export class ClassScoreBoard extends Component {
   render() {
-    const { answersLeft, incorrectCount, correctCount, totalCount } =
-      this.props.state;
+    const { correctCount, incorrectCount, answersLeft } = this.props;
     return (
-      <div
-        id="score-board"
-        style={totalCount === 4 ? { display: "none" } : { display: "default" }}
-      >
+      <div id="score-board">
         <div>Incorrect 🔻: {incorrectCount}</div>
         <div id="choices-left">
           {answersLeft.map((answer) => (

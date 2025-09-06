@@ -1,63 +1,33 @@
 import "./styles/game-board.css";
-import { Images } from "../../assets/Images";
 import { useState } from "react";
-
-const initialFishes = [
-  {
-    name: "trout",
-    url: Images.trout,
-  },
-  {
-    name: "salmon",
-    url: Images.salmon,
-  },
-  {
-    name: "tuna",
-    url: Images.tuna,
-  },
-  {
-    name: "shark",
-    url: Images.shark,
-  },
-];
+import { initialFishes } from "../Shared/Fishes";
 
 export function FunctionalGameBoard({
-  setTotalCount,
+  totalCount,
   setCorrectCount,
   setIncorrectCount,
-  totalCount,
-  correctCount,
-  incorrectCount,
-  answersLeft,
-  setAnswersLeft,
 }) {
-  const [index, setIndex] = useState(0);
-  const nextFishToName = initialFishes[index];
   const [answerInput, setAnswerInput] = useState("");
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (answerInput.toLowerCase() === initialFishes[totalCount].name) {
+      setCorrectCount((prev) => prev + 1);
+    } else {
+      setIncorrectCount((prev) => prev + 1);
+    }
+    setAnswerInput("");
+  };
+
   return (
-    <div
-      id="game-board"
-      style={totalCount === 4 ? { display: "none" } : { display: "default" }}
-    >
+    <div id="game-board">
       <div id="fish-container">
-        <img src={nextFishToName.url} alt={nextFishToName.name} />
+        <img
+          src={initialFishes[totalCount].url}
+          alt={initialFishes[totalCount].name}
+        />
       </div>
-      <form
-        id="fish-guess-form"
-        onSubmit={(e) => {
-          e.preventDefault();
-          index === 3 ? setIndex(0) : setIndex(index + 1);
-          setTotalCount(totalCount + 1);
-          answerInput === nextFishToName.name
-            ? setCorrectCount(correctCount + 1)
-            : setIncorrectCount(incorrectCount + 1);
-          setAnswersLeft(
-            answersLeft.filter((item) => item !== nextFishToName.name)
-          );
-          setAnswerInput("");
-        }}
-      >
+      <form id="fish-guess-form" onSubmit={handleSubmit}>
         <label htmlFor="fish-guess">What kind of fish is this?</label>
         <input
           type="text"

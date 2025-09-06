@@ -1,70 +1,38 @@
 import { Component } from "react";
 import "./styles/game-board.css";
-import { Images } from "../../assets/Images";
-
-const initialFishes = [
-  {
-    name: "trout",
-    url: Images.trout,
-  },
-  {
-    name: "salmon",
-    url: Images.salmon,
-  },
-  {
-    name: "tuna",
-    url: Images.tuna,
-  },
-  {
-    name: "shark",
-    url: Images.shark,
-  },
-];
+import { initialFishes } from "../Shared/Fishes";
 
 export class ClassGameBoard extends Component {
   state = {
     answerInput: "",
-    index: 0,
   };
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const { answerInput } = this.state;
+    const { totalCount, setCorrectCount, setIncorrectCount } = this.props;
+
+    if (answerInput.toLowerCase() === initialFishes[totalCount].name) {
+      setCorrectCount(1);
+    } else {
+      setIncorrectCount(1);
+    }
+    this.setState({ answerInput: "" });
+  };
+
   render() {
-    const { answerInput, index } = this.state;
-    const nextFishToName = initialFishes[index];
-    const { updateState } = this.props;
-    const { totalCount, incorrectCount, correctCount, answersLeft } =
-      this.props.state;
+    const { answerInput } = this.state;
+    const { totalCount } = this.props;
+
     return (
-      <div
-        id="game-board"
-        style={
-          this.props.state.totalCount === 4
-            ? { display: "none" }
-            : { display: "default" }
-        }
-      >
+      <div id="game-board">
         <div id="fish-container">
-          <img src={nextFishToName.url} alt={nextFishToName.name} />
+          <img
+            src={initialFishes[totalCount].url}
+            alt={initialFishes[totalCount].name}
+          />
         </div>
-        <form
-          id="fish-guess-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            this.setState(index === 3 ? { index: 0 } : { index: index + 1 });
-            answerInput === nextFishToName.name
-              ? updateState(
-                  incorrectCount,
-                  correctCount + 1,
-                  totalCount + 1,
-                  answersLeft.filter((item) => item !== nextFishToName.name)
-                )
-              : updateState(
-                  incorrectCount + 1,
-                  correctCount,
-                  totalCount + 1,
-                  answersLeft.filter((item) => item !== nextFishToName.name)
-                );
-            this.setState({ answerInput: "" });
-          }}
-        >
+        <form id="fish-guess-form" onSubmit={this.handleSubmit}>
           <label htmlFor="fish-guess">What kind of fish is this?</label>
           <input
             type="text"
